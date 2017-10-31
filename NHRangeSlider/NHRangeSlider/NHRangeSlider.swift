@@ -5,7 +5,6 @@
 //  Created by Hung on 17/12/16.
 //  Copyright © 2016 Hung. All rights reserved.
 //
-
 import UIKit
 import QuartzCore
 
@@ -149,24 +148,22 @@ open class NHRangeSlider: UIControl {
     }
     
     
-    /// stepValue. If set, will snap to discrete step points along the slider . Default to nil
-    @IBInspectable open var stepValue: Double? = nil {
+    /// stepValue. If set, will snap to discrete step points along the slider . Default to 0
+    @IBInspectable open var stepValue: Double = 0 {
         willSet(newValue) {
-            if newValue != nil {
-                assert(newValue! > 0, "NHRangeSlider: stepValue must be positive")
+            if newValue != 0 {
+                assert(newValue > 0, "NHRangeSlider: stepValue must be positive")
             }
         }
         didSet {
-            if let val = stepValue {
-                if val <= 0 {
-                    stepValue = nil
-                }
+            if stepValue <= 0 {
+                stepValue = 0
             }
             
             updateLayerFrames()
         }
     }
-
+    
     
     
     /// minimum distance between the upper and lower thumbs.
@@ -390,7 +387,7 @@ open class NHRangeSlider: UIControl {
         }
         
         // only send changed value if stepValue is not set. We will trigger this later in endTracking
-        if stepValue == nil {
+        if stepValue == 0 {
             sendActions(for: .valueChanged)
         }
         
@@ -403,12 +400,11 @@ open class NHRangeSlider: UIControl {
         upperThumbLayer.highlighted = false
         
         // let slider snap after user stop dragging
-        if let stepValue = stepValue {
+        if stepValue != 0 {
             lowerValue = round(lowerValue / stepValue) * stepValue
             upperValue = round(upperValue / stepValue) * stepValue
             sendActions(for: .valueChanged)
         }
-        
         
     }
     
